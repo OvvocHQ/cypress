@@ -122,7 +122,7 @@
 </template>
 
 <script lang="ts" setup>
-import { computed, onBeforeUnmount, onMounted, ref } from 'vue'
+import { computed, onBeforeUnmount, onMounted, ref, watch } from 'vue'
 import { useRoute } from 'vue-router'
 import { REPORTER_ID, RUNNER_ID } from './utils'
 import InlineSpecList from '../specs/InlineSpecList.vue'
@@ -350,6 +350,12 @@ const shouldShowStudioButton = computed(() => {
 
 const shouldShowStudioPanel = computed(() => {
   return (studioStore.isLoading || studioStore.isActive) && !screenshotStore.isScreenshotting
+})
+
+watch(shouldShowStudioPanel, (isShowing) => {
+  if (!isShowing) {
+    pendingNavigationResume.value = null
+  }
 })
 
 const hideCommandLog = runnerUiStore.hideCommandLog
